@@ -13,15 +13,24 @@ import Botao from "../../componentes/Botao/index.js";
 import CampoTexto from "../../componentes/CampoTexto/index.js";
 import Fieldset from "../../componentes/Fieldset/index.js";
 import Label from "../../componentes/Label/index.js";
+import { IUsuario } from "../../types/index.js";
+import { criarUsuario } from "../../api/index.js";
 
 const Cadastro = () => {
-  const [nome, setNome] = useState("");
-  const [renda, setRenda] = useState("");
+  const [form, setForm] = useState<Omit<IUsuario, "id">>({
+    nome: "",
+    renda: 0,
+  });
 
   const navigate = useNavigate();
 
-  const aoSubmeterFormulario = (evento: React.FormEvent) => {
+  const aoSubmeterFormulario = async (evento: React.FormEvent) => {
     evento.preventDefault();
+    try {
+      await criarUsuario(form);
+    } catch (error) {
+      console.error(error);
+    }
     navigate("/home");
   };
 
@@ -41,17 +50,27 @@ const Cadastro = () => {
               <CampoTexto
                 type="text"
                 name="nome"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
+                value={form.nome}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setForm({
+                    ...form,
+                    nome: e.target.value,
+                  })
+                }
               />
             </Fieldset>
             <Fieldset>
               <Label htmlFor="renda">Renda mensal total</Label>
               <CampoTexto
-                type="text"
+                type="number"
                 name="renda"
-                value={renda}
-                onChange={(e) => setRenda(e.target.value)}
+                value={form.renda}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setForm({
+                    ...form,
+                    renda: Number(e.target.value),
+                  })
+                }
               />
             </Fieldset>
           </Form>

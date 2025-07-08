@@ -1,0 +1,15 @@
+{
+  "usuarios": [
+    {
+      "id": "d1db",
+      "nome": "Joao",
+      "renda": 1500
+    },
+    {
+      "id": "f79c",
+      "nome": "Isadora",
+      "renda": 1500
+    }
+  ],
+  "transacoes": []
+}
