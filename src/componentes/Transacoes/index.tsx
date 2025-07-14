@@ -10,6 +10,8 @@ import Label from "../Label";
 import CampoTexto from "../CampoTexto";
 import Fieldset from "../Fieldset";
 import { SelectGroup, SelectOption } from "../Select";
+import { useAppContext } from "../../context/AppContext";
+import { ITransacoes } from "../../types";
 
 export const Container = styled(CartaoCorpo)`
   padding: var(--padding-l) var(--padding-m);
@@ -36,43 +38,47 @@ export const ListaMovimentacoes = styled.ul`
   scrollbar-width: none;
   -ms-overflow-style: none;
 `;
-
-const transacoes = [
+const tipos = [
   {
-    id: 1,
-    nome: "Compra de supermercado",
-    valor: 150,
-    tipo: "despesa",
-    categoria: "Alimentação",
-    data: "2024-10-10",
+    label: "Selecione o tipo",
+    value: "",
   },
   {
-    id: 2,
-    nome: "Pagamento de aluguel",
-    valor: 1000,
-    tipo: "despesa",
-    categoria: "Moradia",
-    data: "2024-10-05",
+    label: "Receita",
+    value: "receita",
   },
   {
-    id: 3,
-    nome: "Recebimento de salário",
-    valor: 3000,
-    tipo: "receita",
-    categoria: "Renda",
-    data: "2024-10-01",
+    label: "Despesa",
+    value: "despesa",
   },
 ];
-
 const Transacoes = () => {
   const modalRef = useRef<ModalHandle>(null);
-  const [novaTransacao, setNovaTransacao] = useState({
+  const { transacoes, criaTransacao } = useAppContext();
+  const [novaTransacao, setNovaTransacao] = useState<
+    Omit<ITransacoes, "id" | "userId">
+  >({
     nome: "",
     valor: 0,
-    tipo: "",
+    tipo: "receita",
     categoria: "",
     data: "",
   });
+
+  const aoCriarTransacao = async () => {
+    try {
+      await criaTransacao(novaTransacao);
+      setNovaTransacao({
+        nome: "",
+        valor: 0,
+        tipo: "receita",
+        categoria: "",
+        data: "",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Cartao>
@@ -98,7 +104,7 @@ const Transacoes = () => {
           cliqueForaModal
           titulo="Adicionar transação"
           icon={<MoneyIcon />}
-          aoClicar={() => alert("modal aberta")}
+          aoClicar={aoCriarTransacao}
         >
           <Form>
             <Fieldset>
@@ -133,23 +139,23 @@ const Transacoes = () => {
               <SelectGroup
                 id="tipo"
                 value={novaTransacao.tipo}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                   setNovaTransacao({
                     ...novaTransacao,
                     tipo: e.target.value,
-                  })
-                }
+                  });
+                }}
               >
-                <SelectOption value="">Selecione o tipo</SelectOption>
-                <SelectOption value="receita">Receita</SelectOption>
-                <SelectOption value="despesa">Despesa</SelectOption>
+                {tipos.map((tipo) => (
+                  <SelectOption value={tipo.value}> {tipo.label}</SelectOption>
+                ))}
               </SelectGroup>
             </Fieldset>
             <Fieldset>
               <Label htmlFor="valor">Data</Label>
               <CampoTexto
                 type="date"
-                id="valor"
+                id="data"
                 placeholder="dd/mm/aaaa"
                 value={novaTransacao.data}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

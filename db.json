@@ -1,15 +1,39 @@
 {
   "usuarios": [
     {
-      "id": "d1db",
-      "nome": "Joao",
-      "renda": 1500
-    },
-    {
-      "id": "f79c",
-      "nome": "Isadora",
-      "renda": 1500
+      "id": "ad02",
+      "nome": "Maria da Silva",
+      "renda": 4500,
+      "orcamentoDiario": 100
     }
   ],
-  "transacoes": []
+  "transacoes": [
+    {
+      "id": "06fe",
+      "nome": "mercado",
+      "valor": 150,
+      "tipo": "despesa",
+      "categoria": "alimentação",
+      "data": "2025-07-08",
+      "userId": "ad02"
+    },
+    {
+      "id": "7060",
+      "nome": "pix",
+      "valor": 350,
+      "tipo": "receita",
+      "categoria": "pagamentos",
+      "data": "2025-07-14",
+      "userId": "ad02"
+    },
+    {
+      "id": "f187",
+      "nome": "luz",
+      "valor": 250,
+      "tipo": "despesa",
+      "categoria": "Contas-Casa",
+      "data": "2025-07-21",
+      "userId": "ad02"
+    }
+  ]
 }
